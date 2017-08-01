@@ -318,12 +318,6 @@ class action_plugin_ckgedit_edit extends DokuWiki_Action_Plugin {
             $text
           );
 
-         /* \n_ckgedit_NPBBR_\n: the final \n prevents this from iterfering with next in line markups
-            -- in particular tables which require a new line and margin left 
-           this may leave an empty paragraph in the xhtml, which is removed below 
-         */
-          $text = preg_replace('/<\/(code|file)>(\s*)(?=[^\w])(\s*)/m',"</$1>\n_ckgedit_NPBBR_\n$2",$text );
-
           $text = preg_replace_callback(
              '/~~START_HTML_BLOCK~~.*?CLOSE_HTML_BLOCK/ms',
                  create_function(
@@ -1101,7 +1095,7 @@ $text = preg_replace_callback(
                $count = 0; $str='';
               if($matches[3] && $matches[3] != 'inherit') { $str .= '<span style = "color:' . $matches[3] .'">'; $count++;} 
               if($matches[1] && $matches[1] != 'inherit') { $str .= '<span style = "font-size:' . $matches[1] .'">'; $count++; } 
-              if($matches[2] && $matches[2] != 'inherit') { $str .= '<span style = "font-family:' . $matches[1] .'">'; $count++; } 
+              if($matches[2] && $matches[2] != 'inherit') { $str .= '<span style = "font-family:' . $matches[2] .'">'; $count++; } 
               if($matches[4] && $matches[4] != 'inherit') { $str .= '<span style = "background-color:' . $matches[4] .'">'; $count++; }  
               $str .= $matches[5];              
               for($i =0; $i<$count; $i++) {
