@@ -251,6 +251,17 @@ function dwedit_draft_delete() {
         document.cookie = 'ckgEdht=' + h +';expires="";path=' +JSINFO['doku_base'];
    }
 
+  function ckgd_setImgPaste(which) {        
+      var state = JSINFO['ckgEdPaste'] ? JSINFO['ckgEdPaste']  : "";
+      if(state == 'on')  {
+            which = 'off'  
+      }
+      else which = 'on';      
+      JSINFO['ckgEdPaste'] = which;   
+       document.cookie = 'ckgEdPaste=' + which +';expires="Thu, 18 Dec 2175 12:00:00 UTC";path=' +JSINFO['doku_base'];
+      alert(LANG.plugins.ckgedit.ckg_paste_restart + ' ' + LANG.plugins.ckgedit[which]);    
+   }
+
   function GetE(e) {
        return  document.getElementById(e);
   }
@@ -302,6 +313,11 @@ var dokuBase = location.host + DOKU_BASE;
 jQuery(document).ready(function(){
 
     $dokuWiki = jQuery('.dokuwiki');
+     jQuery('.editbutton_table button').click(function() {
+           var f = this.form;
+           jQuery('<input />').attr('type','hidden').attr('name','mode').attr('value','dwiki').appendTo(jQuery(f));
+            jQuery('<input />').attr('type','hidden').attr('name','fck_preview_mode').attr('value','nil').appendTo(jQuery(f));
+    });  
   
     if(typeof(JSINFO['dbl_click_auth'] !== 'undefined') && JSINFO['dbl_click_auth'] == "") return;  
     if(!JSINFO['ckg_dbl_click']) return;

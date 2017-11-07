@@ -9,6 +9,8 @@
  * @author Martin Sachers <martin.sachers@etron.at>
  * @author ttthomas <tompommes@gmx.de>
  * @author Marco Hofmann <xenadmin@meinekleinefarm.net>
+ * @author hans-juergen.schuemmer <hans-juergen.schuemmer@schuette.de>
+ * @author Jens Weber <skynetworks@web.de>
  */
 $lang['btn_dw_edit']           = 'DW Edit';
 $lang['dw_btn_fck_preview']    = 'CKG Vorschau';
@@ -38,10 +40,17 @@ $lang['minor_changes']         = 'Kleine Änderungen';
 $lang['discard_edits']         = 'Um Änderungen zu speichern klicke OK; um abzubrechen klicke Cancel.';
 $lang['dw_btn_styling']        = 'Schriftart bearbeiten';
 $lang['title_styling']         = 'Öffne mit Schriftart als markup';
+$lang['js']['font_err_1']      = 'Formatierungen können nicht in Links genutzt werden. Klicken Sie auf OK, um die folgende Korrektur zu akzeptieren:';
+$lang['js']['font_err_2']      = '
+Um zu überarbeiten, geben Sie den vollständigen Dokuwik- Link  unten, einschließlich Klammern ein. Um zum Editor zurückzukehren, klicken Sie auf Abbrechen.';
 $lang['js']['font_err_throw']  = 'Zeichenformatierungs-Fehler';
 $lang['js']['dwp_save_err']    = 'Speichern nicht m&ouml;glich f&uuml;r:';
 $lang['js']['dwp_updated']     = 'Editor Priorität aktualisiert auf:';
+$lang['js']['dwp_not_sel']     = 'Editor-Priorität nicht ausgewählt: Es wird durch die Konfiguration der dw_users-Gruppe bestimmt';
 $lang['js']['mediamgr_notice'] = 'Verwenden Sie den Link Dialog um Links einzufügen';
+$lang['js']['font_conflict']   = 'Der Parser fand einen oder mehrere Link-Font-Konflikte. Wenn Sie auf OK klicken, können Sie zum Editor zurückkehren und die Schriftstile entfernen. Weitere Informationen finden Sie unter: https://www.dokuwiki.org/plugin:ckgedit:font_styling#conflicts_with_dokuwiki_links';
+$lang['js']['on']              = 'ein';
+$lang['js']['off']             = 'aus';
 $lang['uprofile_title']        = 'W&auml;hlen Sie ihren Standard Editor';
 $lang['btn_val_dw_fb']         = 'DW Dateibrowser';
 $lang['btn_val_ckg_fb']        = 'CKG Dateibrowser';
@@ -49,3 +58,4 @@ $lang['btn_title_dw_fb']       = 'Speichern und Editor schließen und zum DW Dat
 $lang['btn_title_ckg_fb']      = 'Speichern und Editor schließen und zum CKG Dateibrowser wechseln';
 $lang['formatdel']             = 'Markup wurde aus Header(n) entfernt: Von DokuWiki nicht unterst&uuml;tzt';
 $lang['fontdel']               = 'Markup wurde aus Link(s) entfernt: Von DokuWiki nicht unterst&uuml;tzt';
+$lang['ckg_img_paste']         = 'Zusätzliche Unterstützung beim Einfügen von Bildern aus der Zwischenablage';

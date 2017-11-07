@@ -1,4 +1,4 @@
-rev_17-Aug_04-11_25
+rev_17-Oct_26-10_52
 
 28 Feb 2013
 Added support for interwiki links
@@ -756,21 +756,8 @@ Merged tags branch with master
 17 Dec
 Added support for MSWord Paste
 
-01 Jan 2016
-Upgraded farms version, created farms branch
-
-16 Jan
-fixed insertion of media links from filebrowser.
-
 18 Jan 2016
 Disabled textboxes for internal links and internal media in link dialog.  Changing text in textboxes  has no effect.
-
-19 Jan
-Fixed url for filebrowser image display in frmresourceslist.html, where directory additional path was prepended to correct path
-
-21 Jan
-Added add_v_animal.sh
-
 
 22 Jan
 Added trademark entity to ent.ser
@@ -830,7 +817,6 @@ Update to ckeditor fr lang
 Synched Fr and Eng language files and image.js, image.js.unc with master
 
 4 Mar
-Synched farms with 4.5.7
 Updated farms--fastforward issue
 
 22 Mar 
@@ -838,6 +824,7 @@ Fixed undefined index ckg_savedir on line 98 of config.php
 
 23 Mar
 Fixed save on unchanged revision loaded into editor
+
 4 April
 Fixed corrupted ftp links in parse_wiki.js
 
@@ -871,10 +858,6 @@ Updated settings descripton for removing items from toolbar, i.e, that a list ca
 textbox beneath the checkboxes.
 
 Merged dwpriority_group into master
-
-5 May
-removed dw_priority option which fails to switch back to ckeditor
-in farms
 
 10 May
 Fix to github issue ckgedit #186 (extra thiespace added after format characters).
@@ -934,9 +917,6 @@ added check for captcha before appending captcha_err hide
 4 Jun
 Added entry for $lang[captcha_auth] in en/settings.php
 
-5 June
-replaced above option with message that it doesn't work; otherwise causes Chrome error.
-
 6 Jun
 Fixed bug which converted  double backslash to single in code blocks
 
@@ -956,8 +936,9 @@ Updated DW Korean lang files
 27 June
 Fix for singleton nowiki/code/file escaped with double percent markup
 
-8 Jul
-removed config_animal=null if undefined (should always be defined and corrupts image syntax)
+
+12 Jul
+re-size filebrowser inner windows vs just external popup size
 
 19 Jul
 Synced renderer.php:table_open with updated (declaration for) Doku_Renderer_xhtml::table_open
@@ -1046,11 +1027,129 @@ Added localization strings for symlink checks
 Mar 27
 Synched with captcha branch
 
-30 Mar 2017
-removed backslashes from ends of blockquotes
-
-31 Mar
+Mar 31
 fix for guest use of specialized buttons when captcha is on
 
-Apr 6
-Adds support for image hover text
+Apr 5
+Added hover top availability to images  
+
+Apr 20
+New setting htmlok gives option of allowing HTML_BLOCKs without setting DW's htmlok to true.
+
+Changed option to hmtlblock_ok and set default to false.
+
+Apr 22
+Added double-click funnction to open dw editor when in ckgedit mode
+Added checks for user authorization for switching to dw edit from ckeditor
+
+Apr 23
+Implemented reminders of new double-click feature for Admins.
+
+May 2
+Fixed typo bug in meta.php htmblock_ok -> htmlblock_ok for getting config option
+
+May 5
+Added Geshi plugin
+
+May 6
+Tweaked geshi icon
+Fixed JS type error for mis-labled fr and de lang files
+Geshi German languag file contributed by github user
+
+May 7
+Put Geshi language selection in variable (code block language  had been hard-coded to java)
+
+May 8
+Prepare for merge with master
+
+May 12
+Fixed ajax path error in config.js (for new Geshi plugin)
+
+May 18
+Fixed broken list when li contains links
+May 25
+Config option to disable double click
+May 31
+Fix for code blocks disappearing from tables on reload into editor
+
+June 1
+Fix for snippets
+Synched with bintbl (May 31, June 1)
+
+ Fixed cell where snippet together with text breaks cell
+ 
+June 2
+ Added dblclk option
+ 
+June 3
+Removed class attribute from "remove block" in ckeditor/styles.js, causes type error.
+Moved styles.js to correct folder from root
+fixed missing value for font-family after re-load
+
+Jun 10
+Synched smiley url in config.js to previously defined config.doku_url
+
+June 12
+Support for canonical
+Updated scripts/script-cmpr.js
+
+June 13
+Automatic adding of extra plugins to config.extraPlugins
+
+
+June 18
+merged wrap_2 into master
+
+June 19
+Take wrap tag names from wrap config settings.
+
+June 21
+Fixed wrap->getConf error in meta.php where wrap not installed or is disabled
+
+June 22
+Improved image copy and paste with pastebase64 plugin
+
+July 6
+Updated ckedit French lang
+
+Aug 2
+fix for link's iwiki async failure to complete before required
+fix for replacement macro in iwiki links without substitution texts
+
+Aug 3
+Fixed multiple urlencoding of interwiki links
+
+
+Aug 4
+Merged ilinkt branch: creates correct root ns internal links when using manual entries in link tool
+
+Aug 9
+Restores scayt toolbar item
+
+Aug 10
+  adds urlencoding protection when deaccent option is set to off
+
+Aug 23
+Support for switching between CKEdiktor GUIs
+  
+Sep 9
+Refactored interwiki select in link.js
+Smoother switching between image past modes
+
+Sept 12
+give img paste cookie equiv or never expire
+
+Sept 15
+Refactored adding of tag and wrap plugins
+
+Sep 20
+Remove urls from linkonly images inserted after second and additional saves, resulting in multiple urls corrupting HTML output 
+
+Oct 21
+Insure namespace template data is saved when there has been no activity in editor
+
+Oct 24
+Fixes broken table when cell has pipe in nowiki
+ 
+Oct 26
+Adds back in backslashes when code/file blocks are filtered for extra final line-feeds in tables 

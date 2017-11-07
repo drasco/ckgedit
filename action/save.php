@@ -26,8 +26,15 @@ class action_plugin_ckgedit_save extends DokuWiki_Action_Plugin {
              msg($this->getLang("formatdel"),1);           
          }         
      
+ 
+       
         global $TEXT, $conf;
+        if (isset($_REQUEST["dwed_cancel"]) ) {          
+           $TEXT = io_readFile(wikiFN($_REQUEST["dwed_cancel"])); 
+          return;
+          }                 
         if (!$TEXT) return;
+        $preserve_enc = $this->getConf('preserve_enc');        
         $deaccent = $conf['deaccent'] == 0 ? false : true;
         $TEXT = $_REQUEST['fck_wikitext'];
         
@@ -90,7 +97,7 @@ class action_plugin_ckgedit_save extends DokuWiki_Action_Plugin {
         }     
       $TEXT = str_replace('%%', "FCKGPERCENTESC",  $TEXT);
      
-        if($deaccent) {
+        if($deaccent || $preserve_enc) {
               $TEXT = preg_replace_callback('/^(.*?)(\[\[.*?\]\])*(.*?)$/ms', 
                    create_function(
                          '$matches',         
@@ -167,6 +174,8 @@ class action_plugin_ckgedit_save extends DokuWiki_Action_Plugin {
        } 
        
         $this->replace_entities();
+        /*Remove urls from linkonly images inserted after second and additional saves, resulting in multiple urls  corrupting  HTML output */
+        $TEXT = preg_replace("/\{\{http:\/\/.*?fetch.php\?media=(.*?linkonly.*?)\}\}/",'{{' . "$1$2" .'}}',$TEXT);        
         $TEXT = str_replace('< nowiki >', '%%<nowiki>%%',$TEXT);
 
 /* 11 Dec 2013 see comment below        
@@ -214,7 +223,10 @@ Removed newlines and spaces from beginnings and ends of text enclosed by font ta
       $TEXT = preg_replace_callback(
        '#(code|file)\>\s*.*?\n?\|#ms',
        function($matches) {         
-         return  str_replace("\\", "",$matches[0]);              
+         $matches[0] = preg_replace("/([\w\:])\\\\(\w)/ms","$1@#@$2",$matches[0]); //retain backslashes inside code blocks
+         $matches[0] = preg_replace("/(\w+)\\\\/ms","$1@#@",$matches[0]);
+         $matches[0] =  str_replace("\\", "",$matches[0]);              
+         return str_replace("@#@", "\\",$matches[0]);              
       },
       $TEXT     
       );

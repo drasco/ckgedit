@@ -55,3 +55,10 @@ $lang["sym_not created_3"] = 'There was an error when trying to create symbolic 
 $lang["syms_created"] = 'The following links were created in the userfiles directory: ';
 $lang['dblclk'] ="<b>New Feature:</b> double click browser window to open DW Editor for section editing at cursor. <b>See: </b><a href='https://www.dokuwiki.org/plugin:ckgedit#direct_access_to_dokuwiki_editor'>direct_access_to_dokuwiki_editor</a>. ";
 $lang['dblclk_reminder'] = "<b>Reminder</b> ";
+$lang['ckg_img_paste'] = 'Turn supplementary image paste support';
+$lang['ckg_img_paste_title'] = 'Off to prevent double pastes, or on to enable pastes';
+$lang['js']['ckg_paste_restart'] = 'On reloading the editor, supplementary paste support will be turned';
+$lang['on'] ='on';
+$lang['off'] ='off';
+$lang['js']['on'] ='on';
+$lang['js']['off'] ='off';

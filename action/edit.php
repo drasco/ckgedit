@@ -230,7 +230,7 @@ class action_plugin_ckgedit_edit extends DokuWiki_Action_Plugin {
          $useComplexTables=false;
       }
       
-      if(strpos($text, '%%') !== false || strpos($text, '\\\\') !== false ) {  
+      if(strpos($text, '%%') !== false || strpos($text, '\\\\') !== false || strpos($text, '|') !== false ) {  
       $text = preg_replace('/%%\s*<nowiki>\s*%%/ms', 'PERCNWPERC',$text);
       $text = preg_replace('/%%\s*<(code|file)>\s*%%/ms', 'PERC' . "$1" . 'PERC',$text);
         $text = preg_replace_callback(
@@ -238,6 +238,7 @@ class action_plugin_ckgedit_edit extends DokuWiki_Action_Plugin {
             function ($matches) {
                 $matches[0] = str_replace('%%', 'DBLPERCENT',$matches[0]);
                 $matches[0] =  str_replace('\\ ', 'DBLBACKSPLASH',$matches[0]);
+                 $matches[0] =  str_replace('|', 'NWPIPECHARACTER',$matches[0]);                
                 return $matches[0];
             },
            $text
@@ -596,8 +597,13 @@ CKEDITOR_REPLACE;
          global $skip_styling;
             
 ?>
+<?php
+            if($this->page_from_template) {
+             $ckg_template = 'tpl';   
+            }
+            else $ckg_template ="";
 
- 
+ ?>
    <form id="dw__editform" method="post" action="<?php echo script()?>"  accept-charset="<?php echo $lang['encoding']?>">
     <div class="no">
       <input type="hidden" name="id"   value="<?php echo $ID?>" />
@@ -609,6 +615,7 @@ CKEDITOR_REPLACE;
       <input type="hidden" id="fck_preview_mode"  name="fck_preview_mode" value="nil" />
       <input type="hidden" id="fck_wikitext"    name="fck_wikitext" value="__false__" />     
        <input type="hidden" id="styling"  name="styling" value="styles" />
+      <input type="hidden" id="template"  name="template`" value="<?php echo $ckg_template?>" />
       <?php
       if(function_exists('formSecurityToken')) {
            formSecurityToken();  
@@ -772,13 +779,24 @@ if($is_ckgeditChrome) echo $chrome_dwedit_link;
      </table>
      
  </div>
+<?php
 
+if(!isset($_COOKIE['ckgEdPaste'])) {
+    $paste_value = 'on';
+}
+else {
+    $paste_value = (isset($_COOKIE['ckgEdPaste']) && $_COOKIE['ckgEdPaste'] == 'off' )  ? 'on' : 'off';
+}
+?>
 
      <label class="nowrap" for="complex_tables" id="complex_tables_label">     
         <input type="checkbox" name="complex_tables" value="complex_tables"  id = "complex_tables" 
                      /><span id='complex_tables_label_text'> <?php echo $this->getLang('complex_tables');?></span></label> 
       &nbsp;&nbsp;<label class="nowrap" for="editor_height"><?php echo $this->getLang('editor_height');?></label> 
         <input type="text" size= "4" name="editor_height" title = "<?php echo $this->getLang('editor_height_title'); ?>" value="<?php echo $height?>"  id = "editor_height"  onchange="setEdHeight(this.value);" />  px    
+    &nbsp;&nbsp;<label class="nowrap" for="ckg_img_paste" title ="<?php echo $this->getLang('ckg_img_paste_title'); ?>"> <?php echo $this->getLang('ckg_img_paste') . " ". $this->getLang($paste_value) ?></label> 
+        &nbsp;<input type="checkbox" name="ckg_img_paste" title = "<?php echo $this->getLang('ckg_img_paste_title'); ?>"  
+            id = "ckg_img_paste"  value = "<?php echo $paste_value?>" onchange="ckgd_setImgPaste(this.value);" />
 
       <input style="display:none;" class="button" id="edbtn__save" type="submit" name="do[save]" 
                       value="<?php echo $lang['btn_save']?>" 
@@ -1159,6 +1177,7 @@ $text = preg_replace_callback(
         $xhtml = str_replace('ckgeditFONTOpen', '&amp;lt;font',$xhtml);  // protect font markup in code blocks
         $xhtml = str_replace('ckgeditFONTClose', 'font&amp;gt;',$xhtml);
         $xhtml = str_replace('DBLBACKSPLASH', '\\ ',$xhtml);
+        $xhtml = str_replace('NWPIPECHARACTER', '|',$xhtml);            
         //DBLBACKSPLASH
        $ua = strtolower ($_SERVER['HTTP_USER_AGENT']); 
 	  if(strpos($ua,'chrome') !== false) {
