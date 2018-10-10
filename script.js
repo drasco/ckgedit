@@ -1,13 +1,41 @@
 /*
- * HTML Parser By John Resig (ejohn.org)
- * Original code by Erik Arvidsson, Mozilla Public License
- * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
- * @license    GPL 3 or later (http://www.gnu.org/licenses/gpl.html)
-*/
+ * Customized by Misato Takahashi <misato@takahashi.name>
+ *  - fix if Html document has "<!DOCTYPE>" then parse error.
+ *  - fix if Attribute name includes "-" then parse error
+ *  - fix if Unmatch case start tag and end tag then parse error
+ *  - add function "getElementById"
+ * 
+ * Customised by drasco https://github.com/drasco
+ *  - Bring over doku wiki <code> and htmlok support from ckgedit
+ *  - Removed Misatos HTMLtoXML and toDOM, as not needed
+ *
+ *  HTML Parser By John Resig (ejohn.org)
+ *  Original code by Erik Arvidsson, Mozilla Public License
+ *  http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+ *
+ * // Use like so:
+ * HTMLParser(htmlString, {
+ *     start: function(tag, attrs, unary) {},
+ *     end: function(tag) {},
+ *     chars: function(text) {},
+ *     comment: function(text) {}
+ * });
+ *
+ * // or to get an XML string:
+ * HTMLtoXML(htmlString);
+ *
+ * // or to get an XML DOM Document
+ * var dom = HTMLtoDOM(htmlString);
+ *
+ * dom.getElementById('id');
+ * dom.getElementsByTagName('name');
+ *
+ * // or to inject into an existing document/DOM node
+ * HTMLtoDOM(htmlString, document);
+ * HTMLtoDOM(htmlString, document.body);
+ *
+ */
 
-var HTMLParser;
-var HTMLParserInstalled=true;
-var HTMLParser_Elements = new Array(); 
 (function(){
 
 	// Regular Expressions for parsing tags and attributes
@@ -16,52 +44,50 @@ var HTMLParser_Elements = new Array();
 		attr = /(\w+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
 		
 	// Empty Elements - HTML 4.01
-	var empty = makeMap("br,col,hr,img");
-   // HTMLParser_Elements['empty'] = empty;
+	var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed");
 
 	// Block Elements - HTML 4.01
-	var block = makeMap("blockquote,center,del,div,dl,dt,hr,iframe,ins,li,ol,p,pre,table,tbody,td,tfoot,th,thead,tr,ul");
-  //  HTMLParser_Elements['block'] = block;
+	var block = makeMap("address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul");
 
 	// Inline Elements - HTML 4.01
-	var inline = makeMap("a,abbr,acronym,b,big,br,cite,code,del,em,font,h1,h2,h3,h4,h5,h6,i,img,ins,kbd,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var");
+	var inline = makeMap("a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var");
 
 	// Elements that you can, intentionally, leave open
 	// (and which close themselves)
 	var closeSelf = makeMap("colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr");
 
 	// Attributes that have their values filled in disabled="disabled"
-	var fillAttrs = makeMap("checked,disabled,ismap,noresize,nowrap,readonly,selected");
+	var fillAttrs = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
 
 	// Special Elements (can contain anything)
 	var special = makeMap("script,style");
- 
-   
-	HTMLParser = this.HTMLParser = function( html, handler ) {
-		var index, chars, match, stack = [], last = html;      
-          html = html.replace(/~~OPEN_HTML_BLOCK~~/gm , '~~START_HTML_BLOCK~~') ;
-          html = html.replace(/~~END_HTML_BLOCK~~/gm , '~~CLOSE_HTML_BLOCK~~') ;
-         if(html.match(/~~START_HTML_BLOCK~~/gm) ){            //adopted [\s\S] from Goyvaerts, Reg. Exp. Cookbook (O'Reilly)
-              if(!JSINFO['htmlok']) {
-                 html = html.replace(/~~START_HTML_BLOCK~~|~~CLOSE_HTML_BLOCK~~/gm,"");
-                } 
-        
-             html = html.replace(/(<p.*?>)*\s*~~START_HTML_BLOCK~~\s*(<\/p>)*([\s\S]+)~~CLOSE_HTML_BLOCK~~\s*(<\/p>)*/gm, function(match,p,p1,text,p2) {       
-             text = text.replace(/<\/?div.*?>/gm,"");
-             text = text.replace(/<code>/gm,"");             
-             text = text.replace(/<\/code>/gm,"");             
-             text = text.replace(/</gm,"&lt;");
-             text = text.replace(/<\//gm,"&gt;");
-             return  "~~START_HTML_BLOCK~~\n\n" +   text  + "\n\n~~CLOSE_HTML_BLOCK~~\n\n";
-         }); 
-        }
-        /* remove dwfck note superscripts from inside links */
-        html = html.replace(/(<sup\s+class=\"dwfcknote fckgL\d+\"\>fckgL\d+\s*\<\/sup\>)\<\/a\>/gm, function(match,sup,a) {
-             return( '</a>' +sup);   
-         }
-       );
-        
-		stack.last = function(){
+	
+
+	var HTMLParser = this.HTMLParser = function( html, handler ) {
+		var index, chars, match, stack = [], last = html;
+		tml.replace(/~~OPEN_HTML_BLOCK~~/gm , '~~START_HTML_BLOCK~~') ;
+		html = html.replace(/~~END_HTML_BLOCK~~/gm , '~~CLOSE_HTML_BLOCK~~') ;
+	   if(html.match(/~~START_HTML_BLOCK~~/gm) ){            //adopted [\s\S] from Goyvaerts, Reg. Exp. Cookbook (O'Reilly)
+			if(!JSINFO['htmlok']) {
+			   html = html.replace(/~~START_HTML_BLOCK~~|~~CLOSE_HTML_BLOCK~~/gm,"");
+			  } 
+	  
+		   html = html.replace(/(<p.*?>)*\s*~~START_HTML_BLOCK~~\s*(<\/p>)*([\s\S]+)~~CLOSE_HTML_BLOCK~~\s*(<\/p>)*/gm, function(match,p,p1,text,p2) {       
+		   text = text.replace(/<\/?div.*?>/gm,"");
+		   text = text.replace(/<code>/gm,"");             
+		   text = text.replace(/<\/code>/gm,"");             
+		   text = text.replace(/</gm,"&lt;");
+		   text = text.replace(/<\//gm,"&gt;");
+		   return  "~~START_HTML_BLOCK~~\n\n" +   text  + "\n\n~~CLOSE_HTML_BLOCK~~\n\n";
+	   }); 
+	  }
+	  /* remove dwfck note superscripts from inside links */
+	  html = html.replace(/(<sup\s+class=\"dwfcknote fckgL\d+\"\>fckgL\d+\s*\<\/sup\>)\<\/a\>/gm, function(match,sup,a) {
+		   return( '</a>' +sup);   
+	   }
+	 );
+
+	 	  stack.last = function(){
 			return this[ this.length - 1 ];
 		};
 
@@ -70,7 +96,16 @@ var HTMLParser_Elements = new Array();
 
 			// Make sure we're not in a script or style element
 			if ( !stack.last() || !special[ stack.last() ] ) {
-
+				// Doctype
+				if ( html.toLowerCase().indexOf('<!doctype') == 0 ) {
+					index = html.indexOf('>');
+					if (index >= 0) {
+						if ( handler.comment )
+							handler.comment( html.substring( 2, index ) );
+						html = html.substring( index + 1 );
+						chars = false;
+					}
+  				} else 
 				// Comment
 				if ( html.indexOf("<!--") == 0 ) {
 					index = html.indexOf("-->");
@@ -114,7 +149,7 @@ var HTMLParser_Elements = new Array();
 				}
 
 			} else {
-				html = html.replace(new RegExp("(.*)<\/" + stack.last() + "[^>]*>"), function(all, text){
+				html = html.replace(new RegExp("(.*)<\/" + stack.last() + "[^>]*>", "i"), function(all, text){
 					text = text.replace(/<!--(.*?)-->/g, "$1")
 						.replace(/<!\[CDATA\[(.*?)]]>/g, "$1");
 
@@ -136,6 +171,7 @@ var HTMLParser_Elements = new Array();
 		parseEndTag();
 
 		function parseStartTag( tag, tagName, rest, unary ) {
+			tagName = tagName.toLowerCase();
 			if ( block[ tagName ] ) {
 				while ( stack.last() && inline[ stack.last() ] ) {
 					parseEndTag( "", stack.last() );
@@ -176,9 +212,10 @@ var HTMLParser_Elements = new Array();
 			// If no tag name is provided, clean shop
 			if ( !tagName )
 				var pos = 0;
-				
+
 			// Find the closest opened tag of the same type
 			else
+				tagName = tagName.toLowerCase();
 				for ( var pos = stack.length - 1; pos >= 0; pos-- )
 					if ( stack[ pos ] == tagName )
 						break;
