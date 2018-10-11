@@ -351,11 +351,15 @@ function parse_wikitext(id) {
 			var interwiki_class = "";
         }
   
-       if(tag == 'p') {         
+       if(tag == 'p') {        
+           //<p> 
           this.in_link = false;
           if(this.in_table) { 
               tag = 'p_insert';
               HTMLParser_TABLE=true;
+          }else if (this.list_started){
+              //results += '';//Ideally we'd do p counting, but we can settle for simply putting wiki newline at the end of the paragraph
+              return;
           }
        }
        
@@ -1240,9 +1244,14 @@ function parse_wikitext(id) {
          }   
        }
 
-     if(tag == 'p' && this.in_table) {              
-              tag = 'p_insert';
-              HTMLParser_TABLE=true;
+     if(tag == 'p') {              
+        if (this.in_table){
+            tag = 'p_insert';
+            HTMLParser_TABLE=true;
+        }else if (this.list_started){
+            results += '\\\\ ';
+            return;
+        }
      }
      if(this.geshi) {
         this.geshi = false;
